@@ -25,6 +25,7 @@ public class ServicioUsuarios implements IServicioUsuarios {
         for (Usuario usuarioEnLista : usuarios) {
             if(usuarioEnLista.getId().equals(idUsuario)) return false;
         }
+        usuario.setId(idUsuario);
         usuarios.add(usuario);
         this.repositorioUsuarios.setUsuarios(usuarios);
         return true;
@@ -47,6 +48,8 @@ public class ServicioUsuarios implements IServicioUsuarios {
     @Override
     public byte registrarApuesta(String idUsuario, Set<Integer> apuesta) {
 
+
+
         if(apuesta.size() != 6) return 3;
 
         if(apuesta.stream().anyMatch(e -> e>49)) return 1;
@@ -56,6 +59,8 @@ public class ServicioUsuarios implements IServicioUsuarios {
 
         for (int i = 0; i < usuarios.size(); i++) {
             if(usuarios.get(i).getId().equals(idUsuario)){
+                if (usuarios.get(i).getApuestas().contains(apuesta))
+                    return 4;
                 usuario = usuarios.remove(i);
                 break;
             }

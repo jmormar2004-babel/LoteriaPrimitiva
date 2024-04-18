@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="TIME_PATTERN">%d{HH:mm:ss.SSS} %p %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${TIME_PATTERN}"/>
+        </Console>
+        <RollingFile name="appLog"
+                    fileName="./application.log"
+                    filePattern="./application-%d{yyy-MM-dd}-%i.log">
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.bootcamp.loteriaprimitiva" level="debug" additivity="false">
+            <AppenderRef ref="appLog" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+    </Loggers>
+</Configuration>

@@ -10,17 +10,24 @@ import java.util.Set;
 
 import static org.springframework.http.HttpStatus.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/users")
 public class ControladorUsuario {
 
     private final IServicioUsuarios servicioUsuarios;
 
+    private static final Logger logger = LoggerFactory.getLogger(ControladorUsuario.class);
+
     public ControladorUsuario(IServicioUsuarios servicioUsuarios){
+
         this.servicioUsuarios = servicioUsuarios;
     }
 
-    @PutMapping("/{id}")
+
+    @PostMapping("/{id}")
     public ResponseEntity<String> registrarUsuario(@PathVariable String id, @RequestBody Usuario usuario){
         if(this.servicioUsuarios.agregarUsuario(usuario, id)){
             return ResponseEntity.status(CREATED).body("Usuario Registrado");
@@ -30,6 +37,7 @@ public class ControladorUsuario {
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listarUsuarios(){
+        logger.debug("A");
         return ResponseEntity.status(OK).body(this.servicioUsuarios.listarUsuarios());
     }
 
@@ -46,13 +54,19 @@ public class ControladorUsuario {
                 return ResponseEntity.status(CREATED).body("Apuesta agregada");
             }
             case 1 -> {
+                logger.error("La apuesta porque tiene números mayor a 49.");
                 return ResponseEntity.status(BAD_REQUEST).body("La apuesta porque tiene números mayor a 49.");
             }
             case 2 -> {
+                logger.error("El usuario no ha sido encontrado.");
                 return ResponseEntity.status(NOT_FOUND).body("El usuario no ha sido encontrado.");
             }
             case 3 -> {
+                logger.error("El tamaño de la apuesta debe ser 6.");
                 return ResponseEntity.status(BAD_REQUEST).body("El tamaño de la apuesta debe ser 6.");
+            }
+            case 4 -> {
+                logger.warn("El usuario ya había apostado esos números.");
             }
         }
         return null;
