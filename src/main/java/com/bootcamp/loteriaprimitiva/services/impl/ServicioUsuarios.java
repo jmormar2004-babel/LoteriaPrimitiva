@@ -20,13 +20,14 @@ public class ServicioUsuarios implements IServicioUsuarios {
     }
 
     @Override
-    public void agregarUsuario(Usuario usuario, String idUsuario) {
+    public boolean agregarUsuario(Usuario usuario, String idUsuario) {
         List<Usuario> usuarios = this.repositorioUsuarios.exportarUsuarios();
         for (Usuario usuarioEnLista : usuarios) {
-            if(usuarioEnLista.getId().equals(idUsuario)) return;
+            if(usuarioEnLista.getId().equals(idUsuario)) return false;
         }
         usuarios.add(usuario);
         this.repositorioUsuarios.setUsuarios(usuarios);
+        return true;
     }
 
     @Override
@@ -44,7 +45,11 @@ public class ServicioUsuarios implements IServicioUsuarios {
     }
 
     @Override
-    public void registrarApuesta(String idUsuario, Set<Integer> apuesta) {
+    public byte registrarApuesta(String idUsuario, Set<Integer> apuesta) {
+
+        if(apuesta.size() != 6) return 3;
+
+        if(apuesta.stream().anyMatch(e -> e>49)) return 1;
 
         List<Usuario> usuarios = this.repositorioUsuarios.exportarUsuarios();
         Usuario usuario = null;
@@ -56,7 +61,7 @@ public class ServicioUsuarios implements IServicioUsuarios {
             }
         }
 
-        if(usuario == null) return;
+        if(usuario == null) return 2;
 
         List<Set<Integer>> apuestasDeUsuario = usuario.getApuestas();
 
@@ -69,6 +74,8 @@ public class ServicioUsuarios implements IServicioUsuarios {
         usuarios.add(usuario);
 
         this.repositorioUsuarios.setUsuarios(usuarios);
+
+        return 0;
 
     }
 }
