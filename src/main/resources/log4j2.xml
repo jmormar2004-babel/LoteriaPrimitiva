@@ -8,17 +8,29 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${TIME_PATTERN}"/>
         </Console>
+
         <RollingFile name="appLog"
                     fileName="./application.log"
-                    filePattern="./application-%d{yyy-MM-dd}-%i.log">
+                    filePattern="./application-%d{yyy-MM-dd}-%i.log"
+                    level="info">
+        </RollingFile>
+
+        <RollingFile name="audit"
+                     fileName="./audit.log"
+                     filePattern="./audit-%d{yyy-MM-dd}-%i.log"
+                     level="info">
         </RollingFile>
     </Appenders>
 
     <Loggers>
         <Logger name="com.bootcamp.loteriaprimitiva" level="debug" additivity="false">
-            <AppenderRef ref="appLog" />
             <AppenderRef ref="Console" />
         </Logger>
-
+        <Logger name="com.bootcamp.loteriaprimitiva" level="info" additivity="false">
+            <AppenderRef ref="appLog" />
+        </Logger>
+        <Logger name="com.bootcamp.loteriaprimitiva.services" level="info" additivity="false">
+            <AppenderRef ref="audit" />
+        </Logger>
     </Loggers>
 </Configuration>

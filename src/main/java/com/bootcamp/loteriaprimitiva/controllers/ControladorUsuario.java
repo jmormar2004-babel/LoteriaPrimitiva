@@ -29,15 +29,29 @@ public class ControladorUsuario {
 
     @PostMapping("/{id}")
     public ResponseEntity<String> registrarUsuario(@PathVariable String id, @RequestBody Usuario usuario){
-        if(this.servicioUsuarios.agregarUsuario(usuario, id)){
-            return ResponseEntity.status(CREATED).body("Usuario Registrado");
+
+        switch (this.servicioUsuarios.agregarUsuario(usuario, id)){
+            case 0 -> {
+                return ResponseEntity.status(CREATED).body("Usuario agregado");
+            }
+            case 1 -> {
+                logger.error("El usuario ya existe en la base de datos");
+                return ResponseEntity.status(CONFLICT).body("El usuario ya existe en la base de datos");
+            }
+            case 2 -> {
+                logger.error("Alguna de las apuestas del usuario tiene un tamaño desigual a 6.");
+                return ResponseEntity.status(BAD_REQUEST).body("El tamaño de la apuesta es desigual a 6.");
+            }
+            case 3 -> {
+                logger.error("Algún número de alguna apuesta es mayor que 49 o menor que 1.");
+                return ResponseEntity.status(BAD_REQUEST).body("Algún número es mayor que 49 o menor que 1.");
+            }
         }
-        return ResponseEntity.status(CONFLICT).body("El usuario ya existe en la base de datos");
+        return null;
     }
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listarUsuarios(){
-        logger.debug("A");
         return ResponseEntity.status(OK).body(this.servicioUsuarios.listarUsuarios());
     }
 
@@ -55,7 +69,7 @@ public class ControladorUsuario {
             }
             case 1 -> {
                 logger.error("La apuesta porque tiene números mayor a 49.");
-                return ResponseEntity.status(BAD_REQUEST).body("La apuesta porque tiene números mayor a 49.");
+                return ResponseEntity.status(BAD_REQUEST).body("La apuesta tiene números mayor a 49 o inferiores a 1.");
             }
             case 2 -> {
                 logger.error("El usuario no ha sido encontrado.");

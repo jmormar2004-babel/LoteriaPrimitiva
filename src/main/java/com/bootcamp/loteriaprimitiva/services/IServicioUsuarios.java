@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface IServicioUsuarios {
-    boolean agregarUsuario(Usuario usuario, String idUsuario);
+    byte agregarUsuario(Usuario usuario, String idUsuario);
     List<Usuario> listarUsuarios();
     Usuario obtenerUsuario(String idUsuario);
     byte registrarApuesta(String idUsuario, Set<Integer> apuesta);
